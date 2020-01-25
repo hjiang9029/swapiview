@@ -8,20 +8,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Person extends Actor {
-    private String height;
-    private String mass;
-    private String hairColor;
-    private String skinColor;
-    private String eyeColor;
-    private String birthYear;
-    private String homeWorld;
-    private String species;
-    private String vehicles;
-    private String starships;
+public class Species extends Actor {
 
-    public Person(String url) {
+    public Species(String url) {
         super(url);
+    }
+
+    public Species(String name, ArrayList<String> films) {
+        super(name, films);
     }
 
     @Override
@@ -39,10 +33,6 @@ public class Person extends Actor {
         }
     }
 
-    public Person(String name, ArrayList<String> films) {
-        super(name, films);
-    }
-
     /**
      * Writes this film into a parcel object. Used when transferring between activities.
      * @param parcel the parcel to write to
@@ -55,13 +45,13 @@ public class Person extends Actor {
     /**
      * Creator field for the film class
      */
-    public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
-        public Person createFromParcel(Parcel in) {
-            return new Person(in);
+    public static final Parcelable.Creator<Species> CREATOR = new Parcelable.Creator<Species>() {
+        public Species createFromParcel(Parcel in) {
+            return new Species(in);
         }
 
-        public Person[] newArray(int size) {
-            return new Person[size];
+        public Species[] newArray(int size) {
+            return new Species[size];
         }
     };
 
@@ -70,7 +60,7 @@ public class Person extends Actor {
      *
      * @param in the parcel to use to recreate the person object
      */
-    public Person(Parcel in) {
+    public Species(Parcel in) {
         super(in);
     }
 }

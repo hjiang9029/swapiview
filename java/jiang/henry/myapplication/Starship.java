@@ -8,20 +8,26 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Person extends Actor {
-    private String height;
-    private String mass;
-    private String hairColor;
-    private String skinColor;
-    private String eyeColor;
-    private String birthYear;
-    private String homeWorld;
-    private String species;
-    private String vehicles;
-    private String starships;
+public class Starship extends Actor {
+    private String model;
+    private String modelClass;
+    private String manufacturer;
+    private String creditCost;
+    private String length;
+    private String crewCount;
+    private String passengers;
+    private String maxAtmosphereSpeed;
+    private String hyperdriveRating;
+    private String MGLT;
+    private String cargoCapacity;
+    private String consumables;
 
-    public Person(String url) {
+    public Starship(String url) {
         super(url);
+    }
+
+    public Starship(String name, ArrayList<String> films) {
+        super(name, films);
     }
 
     @Override
@@ -39,10 +45,6 @@ public class Person extends Actor {
         }
     }
 
-    public Person(String name, ArrayList<String> films) {
-        super(name, films);
-    }
-
     /**
      * Writes this film into a parcel object. Used when transferring between activities.
      * @param parcel the parcel to write to
@@ -55,13 +57,13 @@ public class Person extends Actor {
     /**
      * Creator field for the film class
      */
-    public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
-        public Person createFromParcel(Parcel in) {
-            return new Person(in);
+    public static final Parcelable.Creator<Starship> CREATOR = new Parcelable.Creator<Starship>() {
+        public Starship createFromParcel(Parcel in) {
+            return new Starship(in);
         }
 
-        public Person[] newArray(int size) {
-            return new Person[size];
+        public Starship[] newArray(int size) {
+            return new Starship[size];
         }
     };
 
@@ -70,7 +72,7 @@ public class Person extends Actor {
      *
      * @param in the parcel to use to recreate the person object
      */
-    public Person(Parcel in) {
+    public Starship(Parcel in) {
         super(in);
     }
 }

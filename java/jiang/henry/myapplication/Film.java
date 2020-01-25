@@ -3,6 +3,8 @@ package jiang.henry.myapplication;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Represents a 'film' in the Star Wars series
  */
@@ -20,6 +22,13 @@ public class Film extends SWObject {
     // A string that represents the release date of the film
     private String releaseDate;
 
+    private ArrayList<Person> characters;
+    private ArrayList<Planet> planets;
+    private ArrayList<Starship> starships;
+    private ArrayList<Vehicle> vehicles;
+    private ArrayList<Species> species;
+
+
     /**
      * Constructs a film object without any 'extra' metadata contained in all SWObjects
      *
@@ -33,6 +42,11 @@ public class Film extends SWObject {
         this.director = director;
         this.producer = producer;
         this.releaseDate = releaseDate;
+        characters = new ArrayList<>();
+        planets = new ArrayList<>();
+        starships = new ArrayList<>();
+        vehicles = new ArrayList<>();
+        species = new ArrayList<>();
     }
 
     /**
@@ -53,6 +67,11 @@ public class Film extends SWObject {
         this.director = director;
         this.producer = producer;
         this.releaseDate = releaseDate;
+        characters = new ArrayList<>();
+        planets = new ArrayList<>();
+        starships = new ArrayList<>();
+        vehicles = new ArrayList<>();
+        species = new ArrayList<>();
     }
 
     /**
@@ -119,6 +138,45 @@ public class Film extends SWObject {
         this.releaseDate = releaseDate;
     }
 
+    public void addPlanet(Planet p) {
+        planets.add(p);
+    }
+
+    public Planet getPlanet(int index) {
+        return planets.get(index);
+    }
+
+    public void addPerson(Person p) {
+        characters.add(p);
+    }
+    public void addSpecies(Species s) {
+        species.add(s);
+    }
+    public void addStarship(Starship s) {
+        starships.add(s);
+    }
+    public void addVehicle(Vehicle v) {
+        vehicles.add(v);
+    }
+
+    public void loadAllData() {
+        for (Planet planet : planets) {
+            planet.unpackFromURL();
+        }
+        for (Person person : characters) {
+            person.unpackFromURL();
+        }
+        for (Species currentSpecies : species) {
+            currentSpecies.unpackFromURL();
+        }
+        for (Starship starship : starships) {
+            starship.unpackFromURL();
+        }
+        for (Vehicle vehicle : vehicles) {
+            vehicle.unpackFromURL();
+        }
+    }
+
     @Override
     /**
      * toString method for a film. Only has the film name
@@ -138,6 +196,11 @@ public class Film extends SWObject {
         parcel.writeString(director);
         parcel.writeString(producer);
         parcel.writeString(releaseDate);
+        parcel.writeList(characters);
+        parcel.writeList(planets);
+        parcel.writeList(starships);
+        parcel.writeList(vehicles);
+        parcel.writeList(species);
     }
 
     /**
@@ -164,5 +227,10 @@ public class Film extends SWObject {
         this.director = in.readString();
         this.producer = in.readString();
         this.releaseDate = in.readString();
+        this.characters = in.readArrayList(Person.class.getClassLoader());
+        this.planets = in.readArrayList(Planet.class.getClassLoader());
+        this.starships = in.readArrayList(Starship.class.getClassLoader());
+        this.vehicles = in.readArrayList(Vehicle.class.getClassLoader());
+        this.species = in.readArrayList(Species.class.getClassLoader());
     }
 }

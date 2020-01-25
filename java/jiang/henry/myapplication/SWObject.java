@@ -16,6 +16,24 @@ public abstract class SWObject implements Parcelable {
         this.url = url;
     }
 
+    public SWObject(String url) {
+        this.url = url;
+        this.createdDate = "N/A";
+        this.editedDate = "N/A";
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public String getEditedDate() {
+        return editedDate;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
     public SWObject() {
         this.createdDate = "N/A";
         this.editedDate = "N/A";

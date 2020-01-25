@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
     // List view to populate with films
     private ListView lv;
 
-    // Initial service url, calls for all films
-    private static String SERVICE_URL = "https://swapi.co/api/films/";
+    private static String SERVICE_URL = "https://swapi.co/api/";
 
     // Creates a list of SWObjects, which will store all films
     public static ArrayList<SWObject> swList = new ArrayList<>();
@@ -80,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
             Parser parse = Parser.getInstance();
 
             // Making a request to url and getting (hopefully) a response in String
-            String jsonStr = parse.makeServiceCall(SERVICE_URL);
+            // Call for all films
+            String jsonStr = parse.makeServiceCall(SERVICE_URL + "films/");
 
             if (jsonStr != null) {
                 try {
@@ -95,16 +95,44 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject film = results.getJSONObject(j);
 
                         // data setting
-                        String title = film.getString("title");
-                        String director = film.getString("director");
-                        String producer = film.getString("producer");
-                        String releaseDate = film.getString("release_date");
-                        String createdDate = film.getString("created");
-                        String editedDate = film.getString("edited");
-                        String url = film.getString("url");
+                        String title = (String) film.get("title");
+                        String director = (String) film.get("director");
+                        String producer = (String) film.get("producer");
+                        String releaseDate = (String) film.get("release_date");
+                        String createdDate = (String) film.get("created");
+                        String editedDate = (String) film.get("edited");
+                        String url = (String) film.get("url");
+
+                        JSONArray jsonPlanets = film.getJSONArray("planets");
+                        JSONArray jsonPeople = film.getJSONArray("characters");
+                        JSONArray jsonSpecies = film.getJSONArray("species");
+                        JSONArray jsonStarships = film.getJSONArray("starships");
+                        JSONArray jsonVehicles = film.getJSONArray("vehicles");
 
                         // add new film to the list
                         Film newMovie = new Film(title, director, producer, releaseDate, createdDate, editedDate, url);
+
+                        for (int m = 0; m < jsonPlanets.length(); m++) {
+                            Planet currentPlanet = new Planet(jsonPlanets.getString(m));
+                            newMovie.addPlanet(currentPlanet);
+                        }
+                        for (int m = 0; m < jsonPeople.length(); m++) {
+                            Person currentPerson = new Person(jsonPeople.getString(m));
+                            newMovie.addPerson(currentPerson);
+                        }
+                        for (int m = 0; m < jsonSpecies.length(); m++) {
+                            Species currentSpecies = new Species(jsonSpecies.getString(m));
+                            newMovie.addSpecies(currentSpecies);
+                        }
+                        for (int m = 0; m < jsonStarships.length(); m++) {
+                            Starship currentShip = new Starship(jsonStarships.getString(m));
+                            newMovie.addStarship(currentShip);
+                        }
+                        for (int m = 0; m < jsonVehicles.length(); m++) {
+                            Vehicle currentVehicle = new Vehicle(jsonVehicles.getString(m));
+                            newMovie.addVehicle(currentVehicle);
+                        }
+
                         swList.add(newMovie);
                     }
 
