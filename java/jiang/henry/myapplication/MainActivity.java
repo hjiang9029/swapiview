@@ -18,30 +18,52 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-
+/**
+ * Displays the main activity which will contain the initial list of films.
+ * Will also be responsible for the first API call to populate said list.
+ */
 public class MainActivity extends AppCompatActivity {
 
+    // Field to use for debugging
     private String TAG = MainActivity.class.getSimpleName();
+
+    // Used to display API call progress
     private ProgressDialog pDialog;
+
+    // List view to populate with films
     private ListView lv;
-    // URL to get contacts JSON
+
+    // Initial service url, calls for all films
     private static String SERVICE_URL = "https://swapi.co/api/films/";
+
+    // Creates a list of SWObjects, which will store all films
     public static ArrayList<SWObject> swList = new ArrayList<>();
-    public ArrayList<String> filmList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Sets list view reference to corresponding list in layouts
         lv = (ListView) findViewById(R.id.filmList);
-        filmList = new ArrayList<>();
-        new GetContacts().execute();
+        // Call API
+        new ServiceCall().execute();
+
+        // Set listeners to move to next activity
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra("film", swList.get(i));
+                startActivity(intent);
+            }
+        });
     }
 
     /**
      * Async task class to get json by making HTTP call
      */
-    private class GetContacts extends AsyncTask<Void, Void, Void> {
+    private class ServiceCall extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -55,12 +77,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            Parser sh = new Parser();
+            Parser parse = Parser.getInstance();
 
-            // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(SERVICE_URL);
-
-            Log.e(TAG, "Response from url: " + jsonStr);
+            // Making a request to url and getting (hopefully) a response in String
+            String jsonStr = parse.makeServiceCall(SERVICE_URL);
 
             if (jsonStr != null) {
                 try {
@@ -74,9 +94,18 @@ public class MainActivity extends AppCompatActivity {
                     for (int j = 0; j < results.length(); j++) {
                         JSONObject film = results.getJSONObject(j);
 
-                        // add titles to list of titles
+                        // data setting
                         String title = film.getString("title");
-                        filmList.add(title);
+                        String director = film.getString("director");
+                        String producer = film.getString("producer");
+                        String releaseDate = film.getString("release_date");
+                        String createdDate = film.getString("created");
+                        String editedDate = film.getString("edited");
+                        String url = film.getString("url");
+
+                        // add new film to the list
+                        Film newMovie = new Film(title, director, producer, releaseDate, createdDate, editedDate, url);
+                        swList.add(newMovie);
                     }
 
                 } catch (final JSONException e) {
@@ -93,19 +122,18 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             } else {
+                // Could not get a string from the parser/call
                 Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                "Couldn't get json from server. Check LogCat.",
                                 Toast.LENGTH_LONG)
                                 .show();
                     }
                 });
-
             }
-
             return null;
         }
 
@@ -116,8 +144,7 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            ArrayAdapter<String> strAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, filmList);
-            Log.e(TAG, filmList.get(0));
+            ArrayAdapter<SWObject> strAdapter = new ArrayAdapter<SWObject>(MainActivity.this, android.R.layout.simple_list_item_1, swList);
             // Attach the adapter to a ListView
             lv.setAdapter(strAdapter);
         }
