@@ -2,6 +2,7 @@ package jiang.henry.myapplication;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -9,6 +10,8 @@ import java.util.ArrayList;
  * Represents a 'film' in the Star Wars series
  */
 public class Film extends SWObject {
+    // Field to use for debugging
+    private String TAG = Film.class.getSimpleName();
 
     // A string that represents the title
     private String title;
@@ -74,66 +77,34 @@ public class Film extends SWObject {
         species = new ArrayList<>();
     }
 
-    /**
-     * Gets the title of the film
-     * @return a string representing the title
-     */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Sets the title of this film object
-     * @param title a string representing the new title
-     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * Gets the director of this film object
-     * @return a string representing the director
-     */
     public String getDirector() {
         return director;
     }
 
-    /**
-     * Sets the director of this film object
-     * @param director a string representing the new director
-     */
     public void setDirector(String director) {
         this.director = director;
     }
 
-    /**
-     * Gets the producer(s) of this film object
-     * @return a string representing the producer(s)
-     */
     public String getProducer() {
         return producer;
     }
 
-    /**
-     * Sets the producer(s) of this film object
-     * @param producer a string representing the new producer(s)
-     */
     public void setProducer(String producer) {
         this.producer = producer;
     }
 
-    /**
-     * Gets the release date for this film object
-     * @return a string representing the release date
-     */
     public String getReleaseDate() {
         return releaseDate;
     }
 
-    /**
-     * Sets the release date for this film object
-     * @param releaseDate a string representing the new release date
-     */
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
@@ -142,54 +113,75 @@ public class Film extends SWObject {
         planets.add(p);
     }
 
-    public Planet getPlanet(int index) {
-        return planets.get(index);
-    }
-
     public void addPerson(Person p) {
         characters.add(p);
     }
+
     public void addSpecies(Species s) {
         species.add(s);
     }
+
     public void addStarship(Starship s) {
         starships.add(s);
     }
+
     public void addVehicle(Vehicle v) {
         vehicles.add(v);
     }
 
+    public ArrayList<Person> getCharacters() {
+        return characters;
+    }
+
+    public ArrayList<Planet> getPlanets() {
+        return planets;
+    }
+
+    public ArrayList<Starship> getStarships() {
+        return starships;
+    }
+
+    public ArrayList<Vehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public ArrayList<Species> getSpecies() {
+        return species;
+    }
+
+    /**
+     * Unpacks all the data from the list of actors this Film has from their URLs
+     */
     public void loadAllData() {
-        for (Planet planet : planets) {
-            planet.unpackFromURL();
-        }
-        for (Person person : characters) {
-            person.unpackFromURL();
-        }
-        for (Species currentSpecies : species) {
-            currentSpecies.unpackFromURL();
-        }
-        for (Starship starship : starships) {
-            starship.unpackFromURL();
-        }
-        for (Vehicle vehicle : vehicles) {
-            vehicle.unpackFromURL();
+        try {
+            for (Planet planet : planets) {
+                planet.unpackFromURL();
+            }
+            for (Person person : characters) {
+                person.unpackFromURL();
+            }
+            for (Species currentSpecies : species) {
+                currentSpecies.unpackFromURL();
+            }
+            for (Starship starship : starships) {
+                starship.unpackFromURL();
+            }
+            for (Vehicle vehicle : vehicles) {
+                vehicle.unpackFromURL();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred when unpacking through URL.");
         }
     }
 
     @Override
     /**
-     * toString method for a film. Only has the film name
+     * toString will only return the title name for this Film
      */
     public String toString() {
         return getTitle();
     }
 
-    /**
-     * Writes this film into a parcel object. Used when transferring between activities.
-     * @param parcel the parcel to write to
-     * @param i an int representing flags
-     */
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
         parcel.writeString(title);

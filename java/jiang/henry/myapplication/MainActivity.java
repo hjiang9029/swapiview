@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         String editedDate = (String) film.get("edited");
                         String url = (String) film.get("url");
 
+                        // Getting json arrays in response
                         JSONArray jsonPlanets = film.getJSONArray("planets");
                         JSONArray jsonPeople = film.getJSONArray("characters");
                         JSONArray jsonSpecies = film.getJSONArray("species");
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         // add new film to the list
                         Film newMovie = new Film(title, director, producer, releaseDate, createdDate, editedDate, url);
 
+                        // Creating new Actors using only their URL. Will be unpacked at a later time
                         for (int m = 0; m < jsonPlanets.length(); m++) {
                             Planet currentPlanet = new Planet(jsonPlanets.getString(m));
                             newMovie.addPlanet(currentPlanet);

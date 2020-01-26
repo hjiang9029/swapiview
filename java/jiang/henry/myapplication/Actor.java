@@ -16,13 +16,6 @@ public abstract class Actor extends SWObject {
     // The name of this actor
     private String name;
 
-    // A list of films this actor appears in
-    //private ArrayList<String> films;
-
-    public Actor(String name, ArrayList<String> films) {
-        this.name = name;
-        //this.films = films;
-    }
 
     public Actor(String url) {
         super(url);
@@ -42,20 +35,6 @@ public abstract class Actor extends SWObject {
     public void setName(String name) {
         this.name = name;
     }
-
-    /*
-    public ArrayList<String> getFilm() {
-        return films;
-    }
-
-    public void setFilm(ArrayList<String> film) {
-        this.films = film;
-    }
-
-    public void addFilm(String filmTitle) {
-        films.add(filmTitle);
-    }
-    */
 
     /**
      * Writes this film into a parcel object. Used when transferring between activities.
@@ -82,5 +61,10 @@ public abstract class Actor extends SWObject {
         return name;
     }
 
+    /**
+     * 'Unpacks' the information about the actor from their URL.
+     */
     abstract void unpackFromURL();
+
+    abstract String printDescription();
 }

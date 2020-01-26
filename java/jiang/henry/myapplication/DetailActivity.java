@@ -1,18 +1,19 @@
 package jiang.henry.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /*
  * The activity screen for details on a specific film
@@ -24,6 +25,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private Film filmToLoad;
 
+    private HashMap<String, ArrayList<Actor>> filmActorMap;
+
+    private List<String> headers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         filmToLoad = (Film) data.getParcelable("film");
 
-        new Subquery().execute();
+        new Subquery(this).execute();
 
 
     }
@@ -43,6 +48,12 @@ public class DetailActivity extends AppCompatActivity {
      * Async task class to get json by making HTTP call
      */
     private class Subquery extends AsyncTask<Void, Void, Void> {
+
+        private Context context;
+
+        public Subquery(Context context) {
+            this.context = context;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -67,7 +78,7 @@ public class DetailActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            
+            // TODO: Get rid of those textviews
             // Setting text views
             TextView name = findViewById(R.id.title);
             name.setText("Title: " + filmToLoad.getTitle());
@@ -79,7 +90,55 @@ public class DetailActivity extends AppCompatActivity {
             producer.setText("Producer: " + filmToLoad.getProducer());
 
             TextView releaseDate = findViewById(R.id.releaseDate);
-            releaseDate.setText("Release Date: " + filmToLoad.getPlanet(0));
+            releaseDate.setText("Release Date: " + filmToLoad.getReleaseDate());
+
+            prepData();
+
+            ExpandableListView expandListView = (ExpandableListView) findViewById(R.id.expLV);
+            ExpandableListAdapter adapter = new ActorListAdapter(context, headers, filmActorMap);
+
+            expandListView.setAdapter(adapter);
+
+            expandListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+             @Override
+             public boolean onChildClick(ExpandableListView parent, View v,
+                                            int groupPosition, int childPosition, long id) {
+                 Intent intent = new Intent(context, ActorDetailActivity.class);
+                 Actor a = filmActorMap.get(headers.get(groupPosition)).get(childPosition);
+                 intent.putExtra("Actor", filmActorMap.get(headers.get(groupPosition)).get(childPosition));
+                 startActivity(intent);
+                 return false;
+                }
+            });
+        }
+
+        private void prepData() {
+            filmActorMap = new HashMap<>();
+            headers = new ArrayList<>();
+
+            headers.add("Characters");
+            headers.add("Planets");
+            headers.add("Species");
+            headers.add("Starships");
+            headers.add("Vehicles");
+
+            ArrayList<Actor> characters = new ArrayList<>();
+            characters.addAll(filmToLoad.getCharacters());
+            ArrayList<Actor> planets = new ArrayList<>();
+            planets.addAll(filmToLoad.getPlanets());
+            ArrayList<Actor> species = new ArrayList<>();
+            species.addAll(filmToLoad.getSpecies());
+            ArrayList<Actor> starships = new ArrayList<>();
+            starships.addAll(filmToLoad.getStarships());
+            ArrayList<Actor> vehicles = new ArrayList<>();
+            vehicles.addAll(filmToLoad.getVehicles());
+
+            filmActorMap.put(headers.get(0), characters);
+            filmActorMap.put(headers.get(1), planets);
+            filmActorMap.put(headers.get(2), species);
+            filmActorMap.put(headers.get(3), starships);
+            filmActorMap.put(headers.get(4), vehicles);
         }
     }
 }
