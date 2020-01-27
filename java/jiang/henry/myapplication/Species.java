@@ -7,11 +7,12 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-// TODO: Parceable packing and unpacking & Description
 public class Species extends Actor {
 
+    // Field to use for debugging
+    private static String TAG = Species.class.getSimpleName();
+
+    // strings that describe this species
     private String classification;
     private String designation;
     private String averageHeight;
@@ -20,10 +21,6 @@ public class Species extends Actor {
     private String hairColor;
     private String skinColor;
     private String language;
-    private String homeworld;
-
-    // Field to use for debugging
-    private static String TAG = Species.class.getSimpleName();
 
     public Species(String url) {
         super(url);
@@ -93,16 +90,8 @@ public class Species extends Actor {
         this.language = language;
     }
 
-    public String getHomeworld() {
-        return homeworld;
-    }
-
-    public void setHomeworld(String homeworld) {
-        this.homeworld = homeworld;
-    }
-
     @Override
-    void unpackFromURL() {
+    public void unpackFromURL() {
         String jsonStr = Parser.getInstance().makeServiceCall(this.getUrl());
         if (jsonStr != null) {
             try {
@@ -116,7 +105,6 @@ public class Species extends Actor {
                 this.setHairColor((String) obj.get("hair_colors"));
                 this.setSkinColor((String) obj.get("skin_colors"));
                 this.setLanguage((String) obj.get("language"));
-                this.setHomeworld((String) obj.get("homeworld"));
             } catch (JSONException e) {
                 Log.e(TAG, "An error occurred when parsing from json response");
             }
@@ -126,22 +114,37 @@ public class Species extends Actor {
     }
 
     @Override
-    String printDescription() {
-        return null;
+    public String printDescription() {
+        String result = "";
+        result += "\nName: " + this.getName();
+        result += "\nClassification: " + this.getClassification();
+        result += "\nDesignation: " + this.getDesignation();
+        result += "\nAverage Height: " + this.getAverageHeight() + "cm";
+        result += "\nAverage Lifespan: " + this.getAverageLife() + " years";
+        result += "\nEye colour(s): " + this.getEyeColor();
+        result += "\nHair colour(s): " + this.getHairColor();
+        result += "\nSkin colour(s): " + this.getSkinColor();
+        result += "\nLanguages: " + this.getLanguage();
+        return result;
     }
 
     /**
-     * Writes this film into a parcel object. Used when transferring between activities.
+     * Writes this species into a parcel object. Used when transferring between activities.
      * @param parcel the parcel to write to
      * @param i an int representing flags
      */
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
+        parcel.writeString(classification);
+        parcel.writeString(designation);
+        parcel.writeString(averageHeight);
+        parcel.writeString(averageLife);
+        parcel.writeString(eyeColor);
+        parcel.writeString(hairColor);
+        parcel.writeString(skinColor);
+        parcel.writeString(language);
     }
 
-    /**
-     * Creator field for the film class
-     */
     public static final Parcelable.Creator<Species> CREATOR = new Parcelable.Creator<Species>() {
         public Species createFromParcel(Parcel in) {
             return new Species(in);
@@ -159,5 +162,13 @@ public class Species extends Actor {
      */
     public Species(Parcel in) {
         super(in);
+        this.setClassification(in.readString());
+        this.setDesignation(in.readString());
+        this.setAverageHeight(in.readString());
+        this.setAverageLife(in.readString());
+        this.setEyeColor(in.readString());
+        this.setHairColor(in.readString());
+        this.setSkinColor(in.readString());
+        this.setLanguage(in.readString());
     }
 }

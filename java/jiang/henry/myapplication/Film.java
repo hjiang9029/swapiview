@@ -10,6 +10,7 @@ import java.util.ArrayList;
  * Represents a 'film' in the Star Wars series
  */
 public class Film extends SWObject {
+
     // Field to use for debugging
     private String TAG = Film.class.getSimpleName();
 
@@ -25,12 +26,23 @@ public class Film extends SWObject {
     // A string that represents the release date of the film
     private String releaseDate;
 
-    private ArrayList<Person> characters;
-    private ArrayList<Planet> planets;
-    private ArrayList<Starship> starships;
-    private ArrayList<Vehicle> vehicles;
-    private ArrayList<Species> species;
+    // a string that represents the opening crawl
+    private String openingCrawl;
 
+    // a list of characters this film contains
+    private ArrayList<Person> characters;
+
+    // a list of planets this film contains
+    private ArrayList<Planet> planets;
+
+    // a list of starships this film contains
+    private ArrayList<Starship> starships;
+
+    // a list of vehicles this film contains
+    private ArrayList<Vehicle> vehicles;
+
+    // a list of species this film contains
+    private ArrayList<Species> species;
 
     /**
      * Constructs a film object without any 'extra' metadata contained in all SWObjects
@@ -39,12 +51,14 @@ public class Film extends SWObject {
      * @param director String representing the director of the film
      * @param producer String representing the producer(s) of the film
      * @param releaseDate String representing the release date of the film
+     * @param openingCrawl String representing the oepning crawl of the film
      */
-    public Film(String title, String director, String producer, String releaseDate) {
+    public Film(String title, String director, String producer, String releaseDate, String openingCrawl) {
         this.title = title;
         this.director = director;
         this.producer = producer;
         this.releaseDate = releaseDate;
+        this.openingCrawl = openingCrawl;
         characters = new ArrayList<>();
         planets = new ArrayList<>();
         starships = new ArrayList<>();
@@ -59,17 +73,19 @@ public class Film extends SWObject {
      * @param director String representing the director of the film
      * @param producer String representing the producer(s) of the film
      * @param releaseDate String representing the release date of the film
+     * @param openingCrawl String representing the oepning crawl of the film
      * @param created String representing the date created for this object in the API
      * @param edited String representing the date edited for this object in the API
      * @param url String representing the url for the object in the API
      */
-    public Film(String title, String director, String producer, String releaseDate, String created,
-                String edited, String url) {
+    public Film(String title, String director, String producer, String releaseDate, String openingCrawl,
+                String created, String edited, String url) {
         super(created, edited, url);
         this.title = title;
         this.director = director;
         this.producer = producer;
         this.releaseDate = releaseDate;
+        this.openingCrawl = openingCrawl;
         characters = new ArrayList<>();
         planets = new ArrayList<>();
         starships = new ArrayList<>();
@@ -107,6 +123,14 @@ public class Film extends SWObject {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public String getOpeningCrawl() {
+        return openingCrawl;
+    }
+
+    public void setOpeningCrawl(String openingCrawl) {
+        this.openingCrawl = openingCrawl;
     }
 
     public void addPlanet(Planet p) {
@@ -174,20 +198,27 @@ public class Film extends SWObject {
         }
     }
 
-    @Override
     /**
-     * toString will only return the title name for this Film
+     * toString method for a film. Will only return its name
+     * @return a string representing this films' name
      */
+    @Override
     public String toString() {
         return getTitle();
     }
 
+    /**
+     * writes this film to a parcel
+     * @param parcel the parcel to write to
+     * @param i an int representing any flags
+     */
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
         parcel.writeString(title);
         parcel.writeString(director);
         parcel.writeString(producer);
         parcel.writeString(releaseDate);
+        parcel.writeString(openingCrawl);
         parcel.writeList(characters);
         parcel.writeList(planets);
         parcel.writeList(starships);
@@ -195,9 +226,6 @@ public class Film extends SWObject {
         parcel.writeList(species);
     }
 
-    /**
-     * Creator field for the film class
-     */
     public static final Parcelable.Creator<Film> CREATOR = new Parcelable.Creator<Film>() {
         public Film createFromParcel(Parcel in) {
             return new Film(in);
@@ -209,9 +237,8 @@ public class Film extends SWObject {
     };
 
     /**
-     * Constructor from a parcel. Recreates the film from a passed in parcel
-     *
-     * @param in the parcel to use to recreate the film object
+     * creates a film from a passed in parcel
+     * @param in the parcel to read from
      */
     private Film(Parcel in) {
         super(in);
@@ -219,6 +246,7 @@ public class Film extends SWObject {
         this.director = in.readString();
         this.producer = in.readString();
         this.releaseDate = in.readString();
+        this.openingCrawl = in.readString();
         this.characters = in.readArrayList(Person.class.getClassLoader());
         this.planets = in.readArrayList(Planet.class.getClassLoader());
         this.starships = in.readArrayList(Starship.class.getClassLoader());

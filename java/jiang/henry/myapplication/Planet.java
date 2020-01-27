@@ -7,13 +7,15 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-// TODO: Parceable packing and unpacking & Description
+/**
+ * A class representing a planet in the Star Wars franchise
+ */
 public class Planet extends Actor {
 
     // Field to use for debugging
     private static String TAG = Planet.class.getSimpleName();
+
+    // strings that describe this planet
     private String diameter;
     private String rotationPeriod;
     private String orbitalPeriod;
@@ -97,7 +99,7 @@ public class Planet extends Actor {
     }
 
     @Override
-    void unpackFromURL() {
+    public void unpackFromURL() {
         String jsonStr = Parser.getInstance().makeServiceCall(this.getUrl());
         if (jsonStr != null) {
             try {
@@ -121,21 +123,36 @@ public class Planet extends Actor {
 
     @Override
     String printDescription() {
-        return null;
+        String result = "";
+        result += "\nName: " + this.getName();
+        result += "\nDiameter: " + this.getDiameter() + "km";
+        result += "\nRotation Period: " + this.getRotationPeriod() + "hr(s)";
+        result += "\nOrbital Period: " + this.getOrbitalPeriod() + " days";
+        result += "\nGravity: " + this.getGravity();
+        result += "\nPopulation: " + this.getPopulation();
+        result += "\nClimate: " + this.getClimate();
+        result += "\nTerrain: " + this.getTerrain();
+        result += "\n% surface covered in water: " + this.getSurfaceWater() + "%";
+        return result;
     }
 
     /**
-     * Writes this film into a parcel object. Used when transferring between activities.
+     * Writes this planet into a parcel object. Used when transferring between activities.
      * @param parcel the parcel to write to
      * @param i an int representing flags
      */
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
+        parcel.writeString(diameter);
+        parcel.writeString(rotationPeriod);
+        parcel.writeString(orbitalPeriod);
+        parcel.writeString(gravity);
+        parcel.writeString(population);
+        parcel.writeString(climate);
+        parcel.writeString(terrain);
+        parcel.writeString(surfaceWater);
     }
 
-    /**
-     * Creator field for the film class
-     */
     public static final Parcelable.Creator<Planet> CREATOR = new Parcelable.Creator<Planet>() {
         public Planet createFromParcel(Parcel in) {
             return new Planet(in);
@@ -153,5 +170,13 @@ public class Planet extends Actor {
      */
     public Planet(Parcel in) {
         super(in);
+        this.setDiameter(in.readString());
+        this.setRotationPeriod(in.readString());
+        this.setOrbitalPeriod(in.readString());
+        this.setGravity(in.readString());
+        this.setPopulation(in.readString());
+        this.setClimate(in.readString());
+        this.setTerrain(in.readString());
+        this.setSurfaceWater(in.readString());
     }
 }

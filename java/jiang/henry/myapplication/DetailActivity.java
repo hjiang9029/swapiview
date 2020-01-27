@@ -7,8 +7,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,16 +20,24 @@ import java.util.List;
 
 /*
  * The activity screen for details on a specific film
+ * This class is also responsible for any API calls that it needs to call to populate
+ * the activity.
  */
 public class DetailActivity extends AppCompatActivity {
+
+    // static variable for checking if the selected item in the list view is the opening crawl
+    private static String OPENING_CRAWL = "Opening Crawl";
 
     // Used to display API call progress
     private ProgressDialog pDialog;
 
+    // the film this activity will be displaying
     private Film filmToLoad;
 
+    // a map used to populate the expandable list view
     private HashMap<String, ArrayList<Actor>> filmActorMap;
 
+    // contains the subheaders for the expandable list view
     private List<String> headers;
 
     @Override
@@ -60,7 +71,7 @@ public class DetailActivity extends AppCompatActivity {
             super.onPreExecute();
             // Showing progress dialog
             pDialog = new ProgressDialog(DetailActivity.this);
-            pDialog.setMessage("Please wait...");
+            pDialog.setMessage("Loading film...");
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -78,20 +89,32 @@ public class DetailActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            // TODO: Get rid of those textviews
-            // Setting text views
-            TextView name = findViewById(R.id.title);
-            name.setText("Title: " + filmToLoad.getTitle());
+            // List view set-up
+            ListView lv = findViewById(R.id.listDetails);
+            final ArrayList<String> detailsList = new ArrayList<>();
 
-            TextView director = findViewById(R.id.director);
-            director.setText("Director: " + filmToLoad.getDirector());
+            detailsList.add("Title: " + filmToLoad.getTitle());
+            detailsList.add("Director: " + filmToLoad.getDirector());
+            detailsList.add("Producer: " + filmToLoad.getProducer());
+            detailsList.add("Release Date: " + filmToLoad.getReleaseDate());
 
-            TextView producer = findViewById(R.id.producer);
-            producer.setText("Producer: " + filmToLoad.getProducer());
+            detailsList.add(OPENING_CRAWL);
 
-            TextView releaseDate = findViewById(R.id.releaseDate);
-            releaseDate.setText("Release Date: " + filmToLoad.getReleaseDate());
+            ArrayAdapter<String> strAdapter = new ArrayAdapter<String>(DetailActivity.this, android.R.layout.simple_list_item_1, detailsList);
+            lv.setAdapter(strAdapter);
 
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (detailsList.get(i).equals(OPENING_CRAWL)) {
+                        Intent intent = new Intent(DetailActivity.this, CrawlActivity.class);
+                        intent.putExtra("crawl", filmToLoad.getOpeningCrawl());
+                        startActivity(intent);
+                    }
+                }
+            });
+
+            // Expandable list view set-up
             prepData();
 
             ExpandableListView expandListView = (ExpandableListView) findViewById(R.id.expLV);
@@ -113,6 +136,9 @@ public class DetailActivity extends AppCompatActivity {
             });
         }
 
+        /**
+         * Creates, adds data to the list and map used to populate the expandable list view
+         */
         private void prepData() {
             filmActorMap = new HashMap<>();
             headers = new ArrayList<>();

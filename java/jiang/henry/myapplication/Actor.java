@@ -2,9 +2,6 @@ package jiang.henry.myapplication;
 
 
 import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.ArrayList;
 
 /**
  * Represents an 'Actor'. An actor is an entity in the Star Wars franchise, meaning an actor
@@ -17,15 +14,29 @@ public abstract class Actor extends SWObject {
     private String name;
 
 
+    /**
+     * Creates an actor using only the URL associated this actor.
+     * Grants a temporary name to specify that this actor has not yet been unpacked.
+     *
+     * @param url a string representing the url for this actor
+     */
     public Actor(String url) {
         super(url);
         this.name = "TEMP";
     }
 
+    /**
+     * a more 'full' constructor for an actor. requires swapi metadata as well as the name for
+     * this actor.
+     *
+     * @param name the string representing the name this actor has
+     * @param created the string representing the date the swapi object was created
+     * @param edited the string representing the date the swapi object was edited
+     * @param url the string representing the url for this actor
+     */
     public Actor(String name, String created, String edited, String url) {
         super(created, edited, url);
         this.name = name;
-        //films = new ArrayList<String>();
     }
 
     public String getName() {
@@ -37,9 +48,9 @@ public abstract class Actor extends SWObject {
     }
 
     /**
-     * Writes this film into a parcel object. Used when transferring between activities.
+     * writes this actor to a parcel
      * @param parcel the parcel to write to
-     * @param i an int representing flags
+     * @param i an int representing any flags
      */
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
@@ -47,14 +58,14 @@ public abstract class Actor extends SWObject {
     }
 
     /**
-     * Constructor from a parcel. Recreates the film from a passed in parcel
-     *
-     * @param in the parcel to use to recreate the film object
+     * creates an actor from a parcel
+     * @param in the parcel to read from
      */
     protected Actor(Parcel in) {
         super(in);
         this.name = in.readString();
     }
+
 
     @Override
     public String toString() {
@@ -63,8 +74,14 @@ public abstract class Actor extends SWObject {
 
     /**
      * 'Unpacks' the information about the actor from their URL.
+     * Essentially sets all of this actors fields
+     * Used so the initial load on the start page will not be as heavy.
      */
     abstract void unpackFromURL();
 
+    /**
+     * Return a description as a string about this actor
+     * @return the description as a string
+     */
     abstract String printDescription();
 }

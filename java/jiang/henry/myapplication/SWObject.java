@@ -3,7 +3,10 @@ package jiang.henry.myapplication;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
+/**
+ * Represents any object in Swapi
+ * Every object contains a created date, edited date and a url
+ */
 public abstract class SWObject implements Parcelable {
 
     private String createdDate;

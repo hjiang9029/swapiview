@@ -7,11 +7,12 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-// TODO: Parceable packing and unpacking & Description
 public class Vehicle extends Actor {
+
+    // Field to use for debugging
     private static String TAG = Vehicle.class.getSimpleName();
+
+    // strings that describe a vehicle
     private String model;
     private String vehicleClass;
     private String manufacturer;
@@ -124,7 +125,7 @@ public class Vehicle extends Actor {
     }
 
     @Override
-    void unpackFromURL() {
+    public void unpackFromURL() {
         String jsonStr = Parser.getInstance().makeServiceCall(this.getUrl());
         if (jsonStr != null) {
             try {
@@ -149,23 +150,42 @@ public class Vehicle extends Actor {
     }
 
     @Override
-    String printDescription() {
-        return null;
+    public String printDescription() {
+        String result = "";
+        result += "\nName: " + this.getName();
+        result += "\nModel: " + this.getModel();
+        result += "\nStarship class: " + this.getVehicleClass();
+        result += "\nManufacturer: " + this.getManufacturer();
+        result += "\nLength: " + this.getLength() + "m";
+        result += "\nCredit Cost: " + this.getCreditCost();
+        result += "\n# of Crew to operate: " + this.getCrewCount();
+        result += "\n# of Passengers: " + this.getPassengerCount();
+        result += "\nMax Atmosphere Speed: " + this.getMaxAtmosphereSpeed();
+        result += "\nCargo Capacity: " + this.getCargoCapacity() + "kg";
+        result += "\nConsumables: " + this.getConsumables();
+        return result;
     }
 
 
     /**
-     * Writes this film into a parcel object. Used when transferring between activities.
+     * Writes this vehicle into a parcel object. Used when transferring between activities.
      * @param parcel the parcel to write to
      * @param i an int representing flags
      */
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
+        parcel.writeString(model);
+        parcel.writeString(vehicleClass);
+        parcel.writeString(manufacturer);
+        parcel.writeString(length);
+        parcel.writeString(creditCost);
+        parcel.writeString(crewCount);
+        parcel.writeString(passengerCount);
+        parcel.writeString(maxAtmosphereSpeed);
+        parcel.writeString(cargoCapacity);
+        parcel.writeString(consumables);
     }
 
-    /**
-     * Creator field for the film class
-     */
     public static final Parcelable.Creator<Vehicle> CREATOR = new Parcelable.Creator<Vehicle>() {
         public Vehicle createFromParcel(Parcel in) {
             return new Vehicle(in);
@@ -183,5 +203,15 @@ public class Vehicle extends Actor {
      */
     public Vehicle(Parcel in) {
         super(in);
+        this.setModel(in.readString());
+        this.setVehicleClass(in.readString());
+        this.setManufacturer(in.readString());
+        this.setLength(in.readString());
+        this.setCreditCost(in.readString());
+        this.setCrewCount(in.readString());
+        this.setPassengerCount(in.readString());
+        this.setMaxAtmosphereSpeed(in.readString());
+        this.setCargoCapacity(in.readString());
+        this.setConsumables(in.readString());
     }
 }

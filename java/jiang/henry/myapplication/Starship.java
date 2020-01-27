@@ -7,12 +7,11 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-// TODO: Parceable packing and unpacking & Description
 public class Starship extends Actor {
     // Field to use for debugging
     private static String TAG = Starship.class.getSimpleName();
+
+    // strings that describe a starship
     private String model;
     private String modelClass;
     private String manufacturer;
@@ -127,7 +126,7 @@ public class Starship extends Actor {
     }
 
     @Override
-    void unpackFromURL() {
+    public void unpackFromURL() {
         String jsonStr = Parser.getInstance().makeServiceCall(this.getUrl());
         if (jsonStr != null) {
             try {
@@ -154,22 +153,45 @@ public class Starship extends Actor {
     }
 
     @Override
-    String printDescription() {
-        return null;
+    public String printDescription() {
+        String result = "";
+        result += "\nName: " + this.getName();
+        result += "\nModel: " + this.getModel();
+        result += "\nStarship class: " + this.getModelClass();
+        result += "\nManufacturer: " + this.getManufacturer();
+        result += "\nCredit Cost: " + this.getCreditCost();
+        result += "\nLength: " + this.getLength() + "m";
+        result += "\n# of Crew to operate: " + this.getCrewCount();
+        result += "\n# of Passengers: " + this.getPassengers();
+        result += "\nMax Atmosphere Speed: " + this.getMaxAtmosphereSpeed();
+        result += "\nHyperdrive Rating: " + this.getHyperdriveRating();
+        result += "\nMaximum number of Megalights per hour: " + this.getMGLT();
+        result += "\nCargo Capacity: " + this.getCargoCapacity() + "kg";
+        result += "\nConsumables: " + this.getConsumables();
+        return result;
     }
 
     /**
-     * Writes this film into a parcel object. Used when transferring between activities.
+     * Writes this starship into a parcel object. Used when transferring between activities.
      * @param parcel the parcel to write to
      * @param i an int representing flags
      */
     public void writeToParcel(Parcel parcel, int i) {
         super.writeToParcel(parcel, i);
+        parcel.writeString(model);
+        parcel.writeString(modelClass);
+        parcel.writeString(manufacturer);
+        parcel.writeString(creditCost);
+        parcel.writeString(length);
+        parcel.writeString(crewCount);
+        parcel.writeString(passengers);
+        parcel.writeString(maxAtmosphereSpeed);
+        parcel.writeString(hyperdriveRating);
+        parcel.writeString(MGLT);
+        parcel.writeString(cargoCapacity);
+        parcel.writeString(consumables);
     }
 
-    /**
-     * Creator field for the film class
-     */
     public static final Parcelable.Creator<Starship> CREATOR = new Parcelable.Creator<Starship>() {
         public Starship createFromParcel(Parcel in) {
             return new Starship(in);
@@ -187,5 +209,17 @@ public class Starship extends Actor {
      */
     public Starship(Parcel in) {
         super(in);
+        this.setModel(in.readString());
+        this.setModelClass(in.readString());
+        this.setManufacturer(in.readString());
+        this.setCreditCost(in.readString());
+        this.setLength(in.readString());
+        this.setCrewCount(in.readString());
+        this.setPassengers(in.readString());
+        this.setMaxAtmosphereSpeed(in.readString());
+        this.setHyperdriveRating(in.readString());
+        this.setMGLT(in.readString());
+        this.setCargoCapacity(in.readString());
+        this.setConsumables(in.readString());
     }
 }

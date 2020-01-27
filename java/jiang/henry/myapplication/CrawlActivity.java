@@ -6,22 +6,21 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 /**
- * An activity specifically for actors.
- * Displays their description
+ * An activity specifically for the opening crawls of each film
+ * Displays only the opening crawl of the film
  */
-public class ActorDetailActivity extends AppCompatActivity {
+public class CrawlActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_actor_detail);
+        setContentView(R.layout.activity_crawl);
 
         // Unpacking the film passed from Intent
         Intent intent = getIntent();
-        Bundle data = getIntent().getExtras();
-        Actor a = (Actor) data.getParcelable("Actor");
+        String data = getIntent().getStringExtra("crawl");
 
-        TextView name = findViewById(R.id.details);
-        name.setText(a.printDescription());
+        TextView tv = findViewById(R.id.openingCrawl);
+        tv.setText(data);
     }
 }
