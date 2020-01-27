@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class Starship extends Actor {
     // Field to use for debugging
-    private static String TAG = Starship.class.getSimpleName();
+    private static final String TAG = Starship.class.getSimpleName();
 
     // strings that describe a starship
     private String model;
@@ -144,6 +144,8 @@ public class Starship extends Actor {
                 this.setMGLT((String) obj.get("MGLT"));
                 this.setCargoCapacity((String) obj.get("cargo_capacity"));
                 this.setConsumables((String) obj.get("consumables"));
+                this.setCreatedDate((String) obj.get("created"));
+                this.setEditedDate((String) obj.get("edited"));
             } catch (JSONException e) {
                 Log.e(TAG, "An error occurred when parsing from json response");
             }
@@ -160,13 +162,13 @@ public class Starship extends Actor {
         result += "\nStarship class: " + this.getModelClass();
         result += "\nManufacturer: " + this.getManufacturer();
         result += "\nCredit Cost: " + this.getCreditCost();
-        result += "\nLength: " + this.getLength() + "m";
+        result += "\nLength (m): " + this.getLength();
         result += "\n# of Crew to operate: " + this.getCrewCount();
         result += "\n# of Passengers: " + this.getPassengers();
         result += "\nMax Atmosphere Speed: " + this.getMaxAtmosphereSpeed();
         result += "\nHyperdrive Rating: " + this.getHyperdriveRating();
         result += "\nMaximum number of Megalights per hour: " + this.getMGLT();
-        result += "\nCargo Capacity: " + this.getCargoCapacity() + "kg";
+        result += "\nCargo Capacity (kg): " + this.getCargoCapacity();
         result += "\nConsumables: " + this.getConsumables();
         return result;
     }

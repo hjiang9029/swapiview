@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class Species extends Actor {
 
     // Field to use for debugging
-    private static String TAG = Species.class.getSimpleName();
+    private static final String TAG = Species.class.getSimpleName();
 
     // strings that describe this species
     private String classification;
@@ -105,6 +105,8 @@ public class Species extends Actor {
                 this.setHairColor((String) obj.get("hair_colors"));
                 this.setSkinColor((String) obj.get("skin_colors"));
                 this.setLanguage((String) obj.get("language"));
+                this.setCreatedDate((String) obj.get("created"));
+                this.setEditedDate((String) obj.get("edited"));
             } catch (JSONException e) {
                 Log.e(TAG, "An error occurred when parsing from json response");
             }
@@ -119,8 +121,8 @@ public class Species extends Actor {
         result += "\nName: " + this.getName();
         result += "\nClassification: " + this.getClassification();
         result += "\nDesignation: " + this.getDesignation();
-        result += "\nAverage Height: " + this.getAverageHeight() + "cm";
-        result += "\nAverage Lifespan: " + this.getAverageLife() + " years";
+        result += "\nAverage Height (cm): " + this.getAverageHeight();
+        result += "\nAverage Lifespan (years): " + this.getAverageLife();
         result += "\nEye colour(s): " + this.getEyeColor();
         result += "\nHair colour(s): " + this.getHairColor();
         result += "\nSkin colour(s): " + this.getSkinColor();

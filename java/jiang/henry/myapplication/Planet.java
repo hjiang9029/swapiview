@@ -13,7 +13,7 @@ import org.json.JSONObject;
 public class Planet extends Actor {
 
     // Field to use for debugging
-    private static String TAG = Planet.class.getSimpleName();
+    private static final String TAG = Planet.class.getSimpleName();
 
     // strings that describe this planet
     private String diameter;
@@ -113,6 +113,8 @@ public class Planet extends Actor {
                 this.setClimate((String) obj.get("climate"));
                 this.setTerrain((String) obj.get("terrain"));
                 this.setSurfaceWater((String) obj.get("surface_water"));
+                this.setCreatedDate((String) obj.get("created"));
+                this.setEditedDate((String) obj.get("edited"));
             } catch (JSONException e) {
                 Log.e(TAG, "An error occurred when parsing from json response");
             }
@@ -125,15 +127,15 @@ public class Planet extends Actor {
     String printDescription() {
         String result = "";
         result += "\nName: " + this.getName();
-        result += "\nDiameter: " + this.getDiameter() + "km";
-        result += "\nRotation Period: " + this.getRotationPeriod() + "hr(s)";
-        result += "\nOrbital Period: " + this.getOrbitalPeriod() + " days";
+        result += "\nDiameter (km): " + this.getDiameter();
+        result += "\nRotation Period (hrs): " + this.getRotationPeriod();
+        result += "\nOrbital Period (days): " + this.getOrbitalPeriod();
         result += "\nGravity: " + this.getGravity();
         result += "\nPopulation: " + this.getPopulation();
         result += "\nClimate: " + this.getClimate();
         result += "\nTerrain: " + this.getTerrain();
-        result += "\n% surface covered in water: " + this.getSurfaceWater() + "%";
-        return result;
+        result += "\n% surface covered in water: " + this.getSurfaceWater();
+        return result.toString();
     }
 
     /**

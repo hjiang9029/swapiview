@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     // List view to populate with films
     private ListView lv;
 
-    private static String SERVICE_URL = "https://swapi.co/api/";
+    private static final String SERVICE_URL = "https://swapi.co/api/";
 
     // Creates a list of SWObjects, which will store all films
     public static ArrayList<SWObject> swList = new ArrayList<>();

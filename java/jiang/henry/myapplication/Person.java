@@ -13,7 +13,7 @@ import org.json.JSONObject;
 public class Person extends Actor {
 
     // Field to use for debugging
-    private static String TAG = Person.class.getSimpleName();
+    private static final String TAG = Person.class.getSimpleName();
 
     // strings that describe this person
     private String height;
@@ -130,6 +130,8 @@ public class Person extends Actor {
                 this.setHeight((String) obj.get("height"));
                 this.setMass((String) obj.get("mass"));
                 this.setSkinColor((String) obj.get("skin_color"));
+                this.setCreatedDate((String) obj.get("created"));
+                this.setEditedDate((String) obj.get("edited"));
             } catch (JSONException e) {
                 Log.e(TAG, "An error occurred when parsing from json response");
             }
@@ -146,8 +148,8 @@ public class Person extends Actor {
         result += "\nEye Color: " + this.getEyeColor();
         result += "\nGender: " + this.getGender();
         result += "\nHair Color: " + this.getHairColor();
-        result += "\nHeight: " + this.getHeight() + "cm";
-        result += "\nMass: " + this.getMass() + "kg";
+        result += "\nHeight (cm): " + this.getHeight();
+        result += "\nMass (kg): " + this.getMass();
         result += "\nSkin Color: " + this.getSkinColor();
         return result;
     }
